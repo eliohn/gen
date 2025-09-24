@@ -18,6 +18,7 @@ import (
 
 func getFields(db *gorm.DB, conf *model.Config, columns []*model.Column) (fields []*model.Field) {
 	for _, col := range columns {
+		col.SetDataFieldTypeMap(conf.DataFieldTypeMap)
 		col.SetDataTypeMap(conf.DataTypeMap)
 		col.WithNS(conf.FieldJSONTagNS)
 

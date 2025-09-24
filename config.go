@@ -54,8 +54,9 @@ type Config struct {
 	modelNameNS func(tableName string) (modelName string)
 	fileNameNS  func(tableName string) (fileName string)
 
-	dataTypeMap    map[string]func(columnType gorm.ColumnType) (dataType string)
-	fieldJSONTagNS func(columnName string) (tagContent string)
+	dataTypeMap      map[string]func(columnType gorm.ColumnType) (dataType string)
+	dataFieldTypeMap map[string]string
+	fieldJSONTagNS   func(columnName string) (tagContent string)
 
 	modelOpts []ModelOpt
 }
@@ -96,6 +97,10 @@ func (cfg *Config) WithFileNameStrategy(ns func(tableName string) (fileName stri
 // WithDataTypeMap specify data type mapping relationship, only work when syncing table from db
 func (cfg *Config) WithDataTypeMap(newMap map[string]func(columnType gorm.ColumnType) (dataType string)) {
 	cfg.dataTypeMap = newMap
+}
+
+func (cfg *Config) WithDataFieldTypeMap(newMap map[string]string) {
+	cfg.dataFieldTypeMap = newMap
 }
 
 // WithJSONTagNameStrategy specify json tag naming strategy

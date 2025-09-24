@@ -12,20 +12,27 @@ import (
 // Column table column's info
 type Column struct {
 	gorm.ColumnType
-	TableName   string                                                        `gorm:"column:TABLE_NAME"`
-	Indexes     []*Index                                                      `gorm:"-"`
-	UseScanType bool                                                          `gorm:"-"`
-	dataTypeMap map[string]func(columnType gorm.ColumnType) (dataType string) `gorm:"-"`
-	jsonTagNS   func(columnName string) string                                `gorm:"-"`
+	TableName        string                                                        `gorm:"column:TABLE_NAME"`
+	Indexes          []*Index                                                      `gorm:"-"`
+	UseScanType      bool                                                          `gorm:"-"`
+	dataTypeMap      map[string]func(columnType gorm.ColumnType) (dataType string) `gorm:"-"`
+	jsonTagNS        func(columnName string) string                                `gorm:"-"`
+	dataFieldTypeMap map[string]string                                             `gorm:"-"`
 }
 
 // SetDataTypeMap set data type map
 func (c *Column) SetDataTypeMap(m map[string]func(columnType gorm.ColumnType) (dataType string)) {
 	c.dataTypeMap = m
 }
+func (c *Column) SetDataFieldTypeMap(m map[string]string) {
+	c.dataFieldTypeMap = m
+}
 
 // GetDataType get data type
 func (c *Column) GetDataType() (fieldtype string) {
+	if mapping, ok := c.dataFieldTypeMap[c.TableName+"."+c.Name()]; ok {
+		return mapping
+	}
 	if mapping, ok := c.dataTypeMap[c.DatabaseTypeName()]; ok {
 		return mapping(c.ColumnType)
 	}

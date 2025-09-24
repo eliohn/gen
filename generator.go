@@ -187,7 +187,8 @@ func (g *Generator) genModelConfig(tableName string, modelName string, modelOpts
 			FileNameNS:     g.fileNameNS,
 		},
 		FieldConfig: model.FieldConfig{
-			DataTypeMap: g.dataTypeMap,
+			DataTypeMap:      g.dataTypeMap,
+			DataFieldTypeMap: g.dataFieldTypeMap,
 
 			FieldSignable:     g.FieldSignable,
 			FieldNullable:     g.FieldNullable,
@@ -399,6 +400,7 @@ func (g *Generator) generateSingleQueryFile(data *genInfo) (err error) {
 	if structPkgPath == "" {
 		structPkgPath = g.modelPkgPath
 	}
+
 	err = render(tmpl.Header, &buf, map[string]interface{}{
 		"Package":        g.queryPkgName,
 		"ImportPkgPaths": importList.Add(g.importPkgPaths...).Add(structPkgPath).Add(getImportPkgPaths(data)...).Paths(),
